@@ -1,0 +1,252 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background-color: #003366; /* Fundo claro */
+}
+
+/* Menu Lateral */
+.sidebar {
+    width: 265px;
+    background-color: white; /* Fundo branco */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 40px; /* Bordas arredondadas */
+    overflow: hidden; /* Certifique-se de que os elementos internos não ultrapassem as bordas arredondadas */
+}
+
+/* Estilo Box Atacadista */
+.logo {
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.box {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 900; /* Mais negrito */
+    color: #003366;
+    margin-left: 68px;
+    font-family: 'Arial Black', sans-serif; /* Fonte mais negrita */
+}
+
+.atacadista {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 900; /* Mais negrito */
+    color: red; /* Vermelho */
+    margin-left: -11.5px; /* Ajuste para alinhar com "BOX" */
+    font-family: 'Arial Black', sans-serif; /* Fonte mais negrita */
+}
+
+/* Título do Menu */
+.menu-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-left: -10px;
+    margin-bottom: 30px;
+    margin-top: 60px;
+    color: black;
+    position: relative;
+}
+
+.menu-title::after {
+    content: '';
+    position: absolute;
+    left: 0px;
+    bottom: -2px;
+    width: 105%;
+    height: 2px;
+    background-color: black;
+}
+
+/* Botões do Menu */
+.menu button {
+    display: block;
+    width: 100%;
+    padding: 5px;
+    font-size: 1.1rem;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    margin-left: -15px;
+    color: #003366;
+    font-weight: 400; /* Fonte mais suave */
+    font-family: 'Helvetica', sans-serif; /* Fonte mais suave */
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu button:hover {
+    background-color: #003366;
+    color: white;
+}
+
+/* Conteúdo Principal */
+.content {
+    flex-grow: 1;
+    padding: 40px;
+    color: #333;
+    background-color: #003366; /* Fundo branco para o conteúdo */
+    overflow-y: auto;
+}
+
+/* Seções de Conteúdo */
+.content-section {
+    display: none; /* Ocultar seções por padrão */
+}
+
+#trocasSection {
+    display: none; /* Começa com Trocas/Perdas oculto */
+}
+
+#lancarSection {
+    display: block; /* Exibe a seção de Lançar Conferência por padrão */
+}
+
+/* Seção do Conferente */
+#conferenteSection {
+    display: none; /* Inicialmente invisível */
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilizando a tabela de conferentes */
+#tabelaConferentes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#tabelaConferentes th, #tabelaConferentes td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Ajustando o botão Cadastrar */
+.conferente-box {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.conferente-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.conferente-box input {
+    width: calc(100% - 130px); /* Deixa espaço para o botão */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.conferente-box button {
+    width: 120px;
+    padding: 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.conferente-box button:hover {
+    background-color: #0056b3;
+}
+
+/* Ações de Conferente (Alterar/Excluir) */
+.conferente-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.conferente-actions button {
+    padding: 10px 20px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.conferente-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombras suaves na tabela */
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin-top: 20px;
+}
+
+input {
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.btn {
+    padding: 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
