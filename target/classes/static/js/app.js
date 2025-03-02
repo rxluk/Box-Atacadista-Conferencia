@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${conferente.id}</td>
                     <td>${nomeDecodificado}</td>
                     <td>
-                        <button class="btnAlterar" data-id="${conferente.id}">Alterar</button>
-                        <button class="btnExcluir" data-id="${conferente.id}">Excluir</button>
+                        <button class="btn btnAlterar" data-id="${conferente.id}">Alterar</button>
+                        <button class="btn btnExcluir" data-id="${conferente.id}">Excluir</button>
                     </td>
                 `;
                 tabelaBody.appendChild(row);
