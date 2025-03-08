@@ -28,24 +28,6 @@
 <!-- Conteúdo Principal -->
 <main class="content">
 
-    <!-- Aba: Lista de Trocas e Perdas -->
-    <section id="trocasSection" class="content-section">
-        <h2>Trocas e Perdas</h2>
-        <table id="transacoesTable">
-            <thead>
-            <tr>
-                <th>ID Transação</th>
-                <th>Tipo</th>
-                <th>Status</th>
-                <th>Ação</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- As transações serão inseridas via JS -->
-            </tbody>
-        </table>
-    </section>
-
     <!-- Aba: Lançar Conferência -->
     <section id="lancarSection" class="content-section active">
         <h2>Lançar Conferência</h2>
@@ -63,8 +45,8 @@
 
             <label for="novaTipo">Tipo:</label>
             <select id="novaTipo" required>
-                <option value="Troca">Troca</option>
-                <option value="Perda">Perda</option>
+                <option value="TROCA">Troca</option>
+                <option value="PERDA">Perda</option>
             </select>
 
             <button type="submit" class="btn">Lançar</button>

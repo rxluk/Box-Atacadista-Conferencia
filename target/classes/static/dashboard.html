@@ -28,46 +28,39 @@
 <!-- Conteúdo Principal -->
 <main class="content">
 
-    <!-- Aba: Lista de Trocas e Perdas -->
-    <section id="trocasSection" class="content-section">
-        <h2>Trocas e Perdas</h2>
-        <table id="transacoesTable">
-            <thead>
-            <tr>
-                <th>ID Transação</th>
-                <th>Tipo</th>
-                <th>Status</th>
-                <th>Ação</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- As transações serão inseridas via JS -->
-            </tbody>
-        </table>
-    </section>
-
     <!-- Aba: Lançar Conferência -->
-    <section id="lancarSection" class="content-section" style="display: none;">
+    <section id="lancarSection" class="content-section active">
         <h2>Lançar Conferência</h2>
         <form id="lancarForm">
-            <label for="idTransacao">ID da Transação:</label>
-            <input type="text" id="idTransacao" required>
+            <label for="novaTransacao">Transação:</label>
+            <input type="text" id="novaTransacao" required>
 
-            <label for="conferente">Nome do Conferente:</label>
-            <input type="text" id="conferente" required>
+            <label for="novaNotaFiscal">Nota Fiscal:</label>
+            <input type="text" id="novaNotaFiscal" required>
 
-            <button type="submit" class="btn">Lançar Conferência</button>
+            <label for="novaConferente">Conferente:</label>
+            <select id="novaConferente" required>
+                <!-- Conferentes serão inseridos dinamicamente via JS -->
+            </select>
+
+            <label for="novaTipo">Tipo:</label>
+            <select id="novaTipo" required>
+                <option value="TROCA">Troca</option>
+                <option value="PERDA">Perda</option>
+            </select>
+
+            <button type="submit" class="btn">Lançar</button>
         </form>
     </section>
 
     <!-- Seção de Conferente -->
-    <section id="conferenteSection" class="content-section" style="display: none;">
+    <section id="conferenteSection" class="content-section">
         <h2>Conferente</h2>
 
         <div class="input-container">
-            <label for="conferenteInput">Nome do Conferente:</label>
-            <input type="text" id="conferenteInput" placeholder="Digite o nome do conferente" required>
-
+            <br>
+            <label for="conferenteInput">Nome:</label>
+            <input type="text" id="conferenteInput" placeholder="Digite o nome do Conferente" required>
             <button id="btnCadastrar" class="btn">Cadastrar</button>
         </div>
 
@@ -87,6 +80,24 @@
         </table>
     </section>
 
+    <!-- Histórico -->
+    <section id="historicoSection" class="content-section">
+        <h2>Histórico</h2>
+        <table id="historicoTable">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Nota Fiscal</th>
+                <th>Transação</th>
+                <th>Conferente</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Os registros serão inseridos via JS -->
+            </tbody>
+        </table>
+    </section>
 </main>
 
 <!-- Carrega o app.js no final do corpo -->

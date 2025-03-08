@@ -1,6 +1,7 @@
 package box.atacadista.config;
 
 import box.atacadista.controller.ConferenteController;
+import box.atacadista.controller.RegistroConferenciaController;
 import box.atacadista.controller.UserController;
 import com.sun.net.httpserver.*;
 
@@ -18,7 +19,11 @@ public class HttpServerConfig {
         // Rota de login (gera sessão)
         server.createContext("/login", new LoginHandler());
 
+        // Rota de conferente
         server.createContext("/api/conferentes", new ConferenteController());
+
+        //
+        server.createContext("/api/registros_conferencia", new RegistroConferenciaController());
 
         // Rota do dashboard (protegida pela sessão)
         server.createContext("/static/dashboard.html", new AuthenticatedHandler("/dashboard.html"));

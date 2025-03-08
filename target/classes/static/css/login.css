@@ -12,15 +12,15 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #003366;
-    padding-top: 0; /* Sem padding superior para posicionar no topo */
+    background-color: #003366; /* Cor de fundo mais clara, como no dashboard */
+    padding-top: 0;
 }
 
 /* Container principal */
 .container {
     text-align: center;
     padding: 20px;
-    border-radius: 40px; /* Bordas arredondadas */
+    border-radius: 40px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 414px;
@@ -29,32 +29,32 @@ body {
 /* Título */
 .title {
     text-align: center;
-    font-size: 3.5rem; /* Aumentando o tamanho da fonte */
-    font-weight: 900; /* Fonte mais grossa */
-    line-height: 1.05; /* Diminuí ainda mais o espaço entre as palavras */
-    margin-top: 0; /* Tirando qualquer margem do topo */
-    margin-bottom: 200px; /* Ajustando o espaçamento entre o título e o formulário */
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-top: 0;
+    margin-bottom: 70px; /* Ajuste do espaçamento entre título e formulário */
 }
 
 /* Estilos para a palavra "Box" e "Atacadista" */
 .box {
     color: #003366; /* Azul escuro */
     display: block;
-    margin-bottom: -60px; /* Menos espaço entre BOX e ATACADISTA */
+    margin-bottom: -10px; /* Ajustando o alinhamento entre BOX e ATACADISTA */
 }
 
 .atacadista {
     color: red; /* Vermelho */
-    display: block; /* Transformando "ATACADISTA" em bloco */
-    margin-top: 0; /* Eliminando qualquer margem superior */
-    margin-left: -11px; /* Ajustando o alinhamento para centralizar com "BOX" */
+    display: block;
+    margin-top: -40px;
+    margin-left: -5px; /* Ajustando alinhamento de "ATACADISTA" */
 }
 
 /* Estilos do formulário */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Espaçamento entre os campos de input */
+    gap: 20px;
 }
 
 /* Estilos para os campos de entrada */
@@ -77,8 +77,8 @@ input {
 }
 
 input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    border-color: #003366; /* Azul escuro */
+    box-shadow: 0 0 8px rgba(0, 51, 102, 0.3);
 }
 
 /* Estilo do botão */
@@ -95,6 +95,7 @@ input:focus {
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: #005b96; /* Azul mais claro */
     transform: scale(1.05);
 }
+

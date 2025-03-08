@@ -1,109 +1,349 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector(".login-form");
+    const conferenteInput = document.getElementById("conferenteInput");
+    const tabelaBody = document.querySelector("#tabelaConferentes tbody");
+    const conferenteButton = document.getElementById("btnConferente");
+    const conferenteSection = document.getElementById("conferenteSection");
+    const historicoButton = document.getElementById("btnHistorico");
+    const historicoSection = document.getElementById("historicoSection");
+    const lancarButton = document.getElementById("btnLancar");
+    const lancarSection = document.getElementById("lancarSection");
+    const cadastrarButton = document.getElementById("btnCadastrar");
+    const sairButton = document.getElementById("btnSair");
+    const selectConferente = document.getElementById("novaConferente");
+    const lancarForm = document.getElementById("lancarForm");
 
-    // Verifica se está na página de login
-    if (form) {
-        console.log("✅ Página de Login detectada.");
+    // Função para esconder todas as seções
+    const esconderTodasSecoes = () => {
+        const secoes = [conferenteSection, historicoSection, lancarSection];
+        secoes.forEach(secao => {
+            if (secao) {
+                secao.style.display = "none";
+            }
+        });
+    };
 
-        form.addEventListener("submit", async (event) => {
+    // Função para exibir uma seção específica
+    const exibirSecao = (secao) => {
+        esconderTodasSecoes();
+        if (secao) {
+            secao.style.display = "block";
+        }
+    };
+
+    // Esconde todas as seções inicialmente
+    esconderTodasSecoes();
+
+    // Função para exibir mensagens de alerta
+    const exibirAlerta = (mensagem, tipo = "info") => {
+        if (mensagem !== "Conferentes carregados com sucesso!" && mensagem !== "Conferente atualizado com sucesso!") {
+            alert(`${tipo === "error" ? "❌" : "✅"} ${mensagem}`);
+        }
+    };
+
+    // Função para manipular a resposta da API
+    const tratarResposta = async (response, sucessoMsg, erroMsg) => {
+        if (response.ok) {
+            exibirAlerta(sucessoMsg);
+            return await response.text();
+        } else {
+            const errorMessage = await response.text();
+            exibirAlerta(errorMessage || erroMsg, "error");
+            throw new Error(errorMessage || erroMsg);
+        }
+    };
+
+    // Função para realizar o login
+    const login = async (username, password) => {
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                credentials: "include",
+                body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+            });
+
+            await tratarResposta(response, "Login bem-sucedido!", "Usuário ou senha inválidos.");
+            window.location.href = "/static/dashboard.html";
+        } catch (error) {
+            console.error("❌ Erro na requisição:", error);
+            exibirAlerta("Erro ao tentar se conectar ao servidor.", "error");
+        }
+    };
+
+    // Função para carregar os conferentes e popular o select
+    const carregarConferentesNoSelect = async () => {
+        try {
+            const response = await fetch("/api/conferentes");
+            if (!response.ok) throw new Error("Erro ao carregar conferentes.");
+
+            const conferentes = await response.json();
+            selectConferente.innerHTML = ""; // Limpar antes de preencher
+
+            if (conferentes.length === 0) {
+                selectConferente.innerHTML = "<option value=''>Nenhum conferente encontrado</option>";
+                return;
+            }
+
+            conferentes.forEach(conferente => {
+                const option = document.createElement("option");
+                option.value = conferente.id;
+                option.textContent = decodeURIComponent(conferente.name);
+                selectConferente.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("❌ Erro ao carregar conferentes no select:", error);
+            alert("Erro ao carregar conferentes.");
+        }
+    };
+
+    // Exibir a seção de lançamento e carregar conferentes no select
+    if (lancarButton && lancarSection) {
+        lancarButton.addEventListener("click", async () => {
+            exibirSecao(lancarSection);
+            await carregarConferentesNoSelect();
+        });
+    }
+
+    // Função para enviar o formulário de lançamento de conferência
+    if (lancarForm) {
+        lancarForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const username = document.getElementById("username")?.value.trim();
-            const password = document.getElementById("password")?.value.trim();
+            const transacao = document.getElementById("novaTransacao").value.trim();
+            const notaFiscal = document.getElementById("novaNotaFiscal").value.trim();
+            const conferenteId = selectConferente.value;
+            const tipo = document.getElementById("novaTipo").value;
 
-            if (!username || !password) {
-                alert("Por favor, preencha usuário e senha.");
+            if (!transacao || !notaFiscal || !conferenteId || !tipo) {
+                alert("Preencha todos os campos para lançar a conferência.");
                 return;
             }
 
             try {
-                const response = await fetch("/login", {
+                const response = await fetch("/api/registros_conferencia", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    credentials: "include",
-                    body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `transacao=${encodeURIComponent(transacao)}&nota_fiscal=${encodeURIComponent(notaFiscal)}&conferente_id=${conferenteId}&tipo=${tipo}`
                 });
 
-                if (response.status === 200) {
-                    alert("✅ Login bem-sucedido!");
-                    window.location.href = "/static/dashboard.html";
-                } else {
-                    const errorMessage = await response.text();
-                    alert(errorMessage || "Usuário ou senha inválidos.");
+                if (!response.ok) {
+                    const errorMsg = await response.text();
+                    throw new Error(errorMsg || "Erro ao lançar a conferência.");
                 }
+
+                alert("✅ Conferência lançada com sucesso!");
+                lancarForm.reset(); // Limpar o formulário após sucesso
             } catch (error) {
-                console.error("❌ Erro na requisição:", error);
-                alert("Erro ao tentar se conectar ao servidor.");
+                console.error("❌ Erro ao lançar conferência:", error);
+                alert(error.message);
             }
         });
-    } else {
-        console.log("🔄 Página de Dashboard detectada.");
+    }
 
-        // Elementos do Dashboard
-        const conferenteSection = document.getElementById("conferenteSection");
-        const lancarSection = document.getElementById("lancarSection");
-        const historicoSection = document.getElementById("historicoSection");
+    // Função para carregar conferentes
+    const carregarConferentes = async () => {
+        try {
+            const response = await fetch("/api/conferentes");
+            if (!response.ok) throw new Error("Erro ao carregar conferentes.");
 
-        const conferenteButton = document.getElementById("btnConferente");
-        const lancarButton = document.getElementById("btnLancar");
-        const historicoButton = document.getElementById("btnHistorico");
-        const sairButton = document.getElementById("btnSair");
+            const data = await response.json();
 
-        // Função para mostrar a seção correta e esconder as outras
-        function mostrarSecao(secao) {
-            [conferenteSection, lancarSection, historicoSection].forEach((s) => {
-                s.style.display = s === secao ? "block" : "none";
+            console.log("📊 Conferentes carregados:", data);
+            return Array.isArray(data) ? data : [];
+        } catch (error) {
+            console.error("❌ Erro ao carregar conferentes:", error);
+            exibirAlerta("Erro ao tentar carregar os conferentes.", "error");
+            return [];
+        }
+    };
+
+    // Função para atualizar a tabela de conferentes
+    const atualizarTabelaConferentes = (conferentes) => {
+        tabelaBody.innerHTML = conferentes.length === 0
+            ? "<tr><td colspan='3'>Nenhum conferente encontrado.</td></tr>"
+            : conferentes.map(conferente => ` 
+                <tr> 
+                    <td>${conferente.id}</td>
+                    <td>${decodeURIComponent(conferente.name)}</td>
+                    <td>
+                        <button class="btn btnAlterar" data-id="${conferente.id}">Alterar</button>
+                        <button class="btn btnExcluir" data-id="${conferente.id}">Excluir</button>
+                    </td>
+                </tr>`).join('');
+    };
+
+    // Função para realizar o cadastro de um conferente
+    const cadastrarConferente = async (conferenteName) => {
+        try {
+            const response = await fetch("/api/conferentes", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `name=${conferenteName}&role=CONFERENTE`
+            });
+
+            await tratarResposta(response, `Conferente ${conferenteName} cadastrado com sucesso!`, "Erro ao cadastrar o conferente.");
+            conferenteInput.value = "";
+        } catch (error) {
+            console.error("❌ Erro ao cadastrar conferente:", error);
+            exibirAlerta("Erro ao tentar cadastrar o conferente.", "error");
+        }
+    };
+
+    // Função para realizar logout
+    const logout = async () => {
+        try {
+            const response = await fetch("/logout", { method: "POST", credentials: "include" });
+            await tratarResposta(response, "Você saiu com sucesso!", "Erro ao tentar sair.");
+            window.location.href = "/static/login.html";
+        } catch (error) {
+            console.error("❌ Erro ao fazer logout", error);
+            exibirAlerta("Erro ao tentar sair.", "error");
+        }
+    };
+
+    // Inicializa a página de login
+    if (form) {
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            if (username && password) {
+                login(username, password);
+            } else {
+                exibirAlerta("Por favor, preencha usuário e senha.", "error");
+            }
+        });
+    }
+
+    // Página de Dashboard
+    if (!form) {
+        // Toggle para abrir a seção de conferentes
+        if (conferenteButton && conferenteSection) {
+            conferenteButton.addEventListener("click", async () => {
+                exibirSecao(conferenteSection);
+                const conferentes = await carregarConferentes();
+                atualizarTabelaConferentes(conferentes);
             });
         }
 
-        // Inicialmente esconde todas as seções
-        mostrarSecao(null);
-
-        // Evento para alternar a seção de Conferente
-        if (conferenteButton) {
-            conferenteButton.addEventListener("click", () => {
-                mostrarSecao(conferenteSection);
+        // Toggle para abrir a seção de histórico
+        if (historicoButton && historicoSection) {
+            historicoButton.addEventListener("click", async () => {
+                exibirSecao(historicoSection);
+                await carregarHistorico(); // Agora o await pode ser usado
             });
         }
 
-        // Evento para alternar a seção de Lançar
-        if (lancarButton) {
+        // Toggle para abrir a seção de lançar conferência
+        if (lancarButton && lancarSection) {
             lancarButton.addEventListener("click", () => {
-                mostrarSecao(lancarSection);
+                exibirSecao(lancarSection);
             });
         }
 
-        // Evento para alternar a seção de Histórico
-        if (historicoButton) {
-            historicoButton.addEventListener("click", () => {
-                mostrarSecao(historicoSection);
+        // Cadastrar conferente
+        if (cadastrarButton) {
+            cadastrarButton.addEventListener("click", async () => {
+                const conferenteName = conferenteInput.value.trim();
+                if (conferenteName) {
+                    await cadastrarConferente(conferenteName);
+                    const conferentes = await carregarConferentes();
+                    atualizarTabelaConferentes(conferentes);
+                } else {
+                    exibirAlerta("Por favor, insira o nome do conferente.", "error");
+                }
             });
         }
 
-        // Evento para o botão de Sair
-        if (sairButton) {
-            sairButton.addEventListener("click", async () => {
-                const confirmar = confirm("🔒 Tem certeza que deseja sair?");
-                if (!confirmar) return;
+        // Manipular eventos de alterar e excluir conferentes
+        if (tabelaBody) {
+            tabelaBody.addEventListener("click", async (event) => {
+                const target = event.target;
+                const id = target.dataset.id;
+                if (!id) return;
 
-                try {
-                    const response = await fetch("/logout", {
-                        method: "POST",
-                        credentials: "include",
-                    });
+                if (target.classList.contains("btnAlterar")) {
+                    const novoNome = prompt("Digite o novo nome do conferente:");
+                    if (novoNome) {
+                        try {
+                            const response = await fetch(`/api/conferentes/${id}`, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: `name=${novoNome}&role=CONFERENTE`
+                            });
 
-                    if (response.ok) {
-                        alert("👋 Você saiu com sucesso!");
-                        window.location.href = "/static/login.html";
-                    } else {
-                        console.error("❌ Falha no logout", response);
-                        alert("Erro ao tentar sair.");
+                            await tratarResposta(response, "Conferente atualizado com sucesso!", "Erro ao alterar o conferente.");
+                            const conferentes = await carregarConferentes();
+                            atualizarTabelaConferentes(conferentes);
+                        } catch (error) {
+                            console.error("❌ Erro ao alterar conferente:", error);
+                        }
                     }
-                } catch (error) {
-                    console.error("❌ Erro ao fazer logout", error);
-                    alert("Erro ao tentar sair.");
+                }
+
+                if (target.classList.contains("btnExcluir")) {
+                    if (confirm("Tem certeza que deseja excluir este conferente?")) {
+                        try {
+                            const response = await fetch(`/api/conferentes/${id}`, { method: "DELETE" });
+                            await tratarResposta(response, "Conferente excluído com sucesso!", "Erro ao excluir o conferente.");
+                            const conferentes = await carregarConferentes();
+                            atualizarTabelaConferentes(conferentes);
+                        } catch (error) {
+                            console.error("❌ Erro ao excluir conferente:", error);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Função para carregar o histórico
+        const carregarHistorico = async () => {
+            try {
+                const response = await fetch("/api/registros_conferencia");
+                if (!response.ok) throw new Error("Erro ao carregar histórico.");
+
+                const historico = await response.json();
+                const historicoTableBody = document.querySelector("#historicoTable tbody");
+
+                // Limpar a tabela antes de preencher
+                historicoTableBody.innerHTML = "";
+
+                if (historico.length === 0) {
+                    historicoTableBody.innerHTML = "<tr><td colspan='5'>Nenhum registro encontrado.</td></tr>";
+                    return;
+                }
+
+                historico.forEach(item => {
+                    const row = document.createElement("tr");
+
+                    // Garantir que a data seja exibida corretamente
+                    const data = new Date(item.data + "T00:00:00"); // Adicionando a hora para evitar problemas de fuso horário
+                    const dataFormatada = isNaN(data)
+                        ? 'Data inválida' // Caso a data seja inválida, exibe uma mensagem padrão
+                        : data.toLocaleDateString('pt-BR'); // Formata corretamente para DD/MM/YYYY
+
+                    row.innerHTML = `
+                <td>${dataFormatada}</td>
+                <td>${item.tipo}</td>
+                <td>${item.nota_fiscal}</td>
+                <td>${item.transacao}</td>
+                <td>${item.conferente}</td>
+            `;
+                    historicoTableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("❌ Erro ao carregar histórico:", error);
+                exibirAlerta("Erro ao carregar histórico.", "error");
+            }
+        };
+
+        // Evento de logout
+        if (sairButton) {
+            sairButton.addEventListener("click", () => {
+                if (confirm("Tem certeza que deseja sair?")) {
+                    logout();
                 }
             });
         }

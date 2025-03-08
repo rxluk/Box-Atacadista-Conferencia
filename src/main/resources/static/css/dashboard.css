@@ -87,7 +87,7 @@ body {
 
 /* Seção ativa */
 .content-section.active {
-    display: block;
+    display: none;
 }
 
 /* Tabelas */
