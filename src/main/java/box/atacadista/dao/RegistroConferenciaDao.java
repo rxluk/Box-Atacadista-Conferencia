@@ -66,6 +66,76 @@ public class RegistroConferenciaDao {
         return null;
     }
 
+    // Obter registros de conferência por transação
+    public List<RegistroConferencia> getRegistrosConferenciaByTransacao(String transacao) {
+        List<RegistroConferencia> registros = new ArrayList<>();
+        String sql = "SELECT * FROM registros_conferencia WHERE transacao LIKE ?";
+
+        try (Connection conn = SQLiteConfig.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + transacao + "%"); // Usando LIKE para buscar por transação
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Recuperando o conferente
+                ConferenteDao conferenteDao = new ConferenteDao();
+                Conferente conferente = conferenteDao.getConferenteById(rs.getLong("conferente_id"));
+                Categoria tipo = Categoria.valueOf(rs.getString("tipo"));
+                LocalDate data = rs.getDate("data").toLocalDate(); // Recuperando a data
+
+                // Criando o objeto RegistroConferencia
+                RegistroConferencia registro = new RegistroConferencia(
+                        rs.getString("transacao"),
+                        rs.getString("nota_fiscal"),
+                        conferente,
+                        tipo
+                );
+                registro.setData(data); // Setando a data
+
+                // Adicionando à lista
+                registros.add(registro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return registros;
+    }
+
+    // Obter registros de conferência por nota fiscal
+    public List<RegistroConferencia> getRegistrosConferenciaByNotaFiscal(String notaFiscal) {
+        List<RegistroConferencia> registros = new ArrayList<>();
+        String sql = "SELECT * FROM registros_conferencia WHERE nota_fiscal LIKE ?";
+
+        try (Connection conn = SQLiteConfig.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + notaFiscal + "%"); // Usando LIKE para buscar por nota fiscal
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Recuperando o conferente
+                ConferenteDao conferenteDao = new ConferenteDao();
+                Conferente conferente = conferenteDao.getConferenteById(rs.getLong("conferente_id"));
+                Categoria tipo = Categoria.valueOf(rs.getString("tipo"));
+                LocalDate data = rs.getDate("data").toLocalDate(); // Recuperando a data
+
+                // Criando o objeto RegistroConferencia
+                RegistroConferencia registro = new RegistroConferencia(
+                        rs.getString("transacao"),
+                        rs.getString("nota_fiscal"),
+                        conferente,
+                        tipo
+                );
+                registro.setData(data); // Setando a data
+
+                // Adicionando à lista
+                registros.add(registro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return registros;
+    }
+
     // Obter todos os registros de conferência
     public List<RegistroConferencia> getAllRegistrosConferencia() {
         List<RegistroConferencia> registros = new ArrayList<>();

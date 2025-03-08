@@ -31,6 +31,10 @@ public class RegistroConferenciaController implements HttpHandler {
             getRegistroConferenciaById(exchange);
         } else if ("GET".equalsIgnoreCase(method) && path.equals("/api/registros_conferencia")) {
             getAllRegistrosConferencia(exchange);
+        } else if ("GET".equalsIgnoreCase(method) && path.matches("/api/registros_conferencia/transacao/.*")) {
+            getRegistrosConferenciaByTransacao(exchange);
+        } else if ("GET".equalsIgnoreCase(method) && path.matches("/api/registros_conferencia/notafiscal/.*")) {
+            getRegistrosConferenciaByNotaFiscal(exchange);
         } else if ("POST".equalsIgnoreCase(method) && path.equals("/api/registros_conferencia")) {
             createRegistroConferencia(exchange);
         } else if ("PUT".equalsIgnoreCase(method) && path.matches("/api/registros_conferencia/\\d+")) {
@@ -40,6 +44,59 @@ public class RegistroConferenciaController implements HttpHandler {
         } else {
             sendResponse(exchange, 404, "Endpoint não encontrado");
         }
+    }
+
+    private void getRegistrosConferenciaByNotaFiscal(HttpExchange exchange) throws IOException {
+        String notaFiscal = extractParametro(exchange, "nota_fiscal");
+        List<RegistroConferencia> registros = registroConferenciaDao.getRegistrosConferenciaByNotaFiscal(notaFiscal);
+
+        if (!registros.isEmpty()) {
+            String response = registros.stream()
+                    .map(r -> {
+                        Conferente conferente = conferenteDao.getConferenteById(r.getConferente().getId());
+                        String nomeConferente = conferente != null ? conferente.getName() : "Desconhecido";
+                        String dataFormatada = r.getData() != null ? r.getData().format(DATE_FORMATTER) : "";
+                        return String.format("{\"id\":%d, \"transacao\":\"%s\", \"nota_fiscal\":\"%s\", \"conferente\":\"%s\", \"tipo\":\"%s\", \"data\":\"%s\"}",
+                                r.getId(), r.getTransacao(), r.getNotaFiscal(), nomeConferente, r.getTipo(), dataFormatada);
+                    })
+                    .collect(Collectors.joining(",\n", "[\n", "\n]"));
+            sendResponse(exchange, 200, response);
+        } else {
+            sendResponse(exchange, 404, "Nenhum registro encontrado para a nota fiscal especificada");
+        }
+    }
+
+    private void getRegistrosConferenciaByTransacao(HttpExchange exchange) throws IOException {
+        String transacao = extractParametro(exchange, "transacao");
+        List<RegistroConferencia> registros = registroConferenciaDao.getRegistrosConferenciaByTransacao(transacao);
+
+        if (!registros.isEmpty()) {
+            String response = registros.stream()
+                    .map(r -> {
+                        Conferente conferente = conferenteDao.getConferenteById(r.getConferente().getId());
+                        String nomeConferente = conferente != null ? conferente.getName() : "Desconhecido";
+                        String dataFormatada = r.getData() != null ? r.getData().format(DATE_FORMATTER) : "";
+                        return String.format("{\"id\":%d, \"transacao\":\"%s\", \"nota_fiscal\":\"%s\", \"conferente\":\"%s\", \"tipo\":\"%s\", \"data\":\"%s\"}",
+                                r.getId(), r.getTransacao(), r.getNotaFiscal(), nomeConferente, r.getTipo(), dataFormatada);
+                    })
+                    .collect(Collectors.joining(",\n", "[\n", "\n]"));
+            sendResponse(exchange, 200, response);
+        } else {
+            sendResponse(exchange, 404, "Nenhum registro encontrado para a transação especificada");
+        }
+    }
+
+    // Método auxiliar para extrair parâmetros da URL
+    private String extractParametro(HttpExchange exchange, String parametro) {
+        String path = exchange.getRequestURI().getPath();
+        String[] parts = path.split("/");
+        // Assume que o parâmetro desejado está sempre na última posição da URL após o último "/"
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].equals(parametro)) {
+                return parts[i + 1]; // Retorna o valor que vem após o nome do parâmetro
+            }
+        }
+        return "";  // Retorna uma string vazia caso o parâmetro não seja encontrado
     }
 
     private void getAllRegistrosConferencia(HttpExchange exchange) throws IOException {
