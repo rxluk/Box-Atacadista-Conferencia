@@ -83,6 +83,21 @@
     <!-- Histórico -->
     <section id="historicoSection" class="content-section">
         <h2>Histórico</h2>
+
+        <!-- Filtro de Consulta -->
+        <div class="consulta">
+            <label for="consultaInput">Consulta:</label>
+            <input type="text" id="consultaInput" placeholder="Palavra chave...">
+
+            <label for="filtroSelect">Filtro:</label>
+            <select id="filtroSelect">
+                <option value="transacao">Transação</option>
+                <option value="nota_fiscal">Nota Fiscal</option>
+            </select>
+
+            <button id="consultarBtn">Consultar</button>
+        </div>
+
         <table id="historicoTable">
             <thead>
             <tr>
