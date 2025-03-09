@@ -40,14 +40,14 @@ public class HttpServerConfig {
         server.createContext("/static", new StaticFileHandler());
 
         server.start();
-        System.out.println("🚀 Servidor rodando na porta 8080...");
+        System.out.println("Servidor rodando na porta 8080...");
     }
 
     // Handler de Login: Valida credenciais e cria a sessão
     static class LoginHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            System.out.println("🔍 Requisição recebida no /login: " + exchange.getRequestMethod());
+            System.out.println("Requisição recebida no /login: " + exchange.getRequestMethod());
 
             if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
                 InputStream requestBody = exchange.getRequestBody();
@@ -57,11 +57,11 @@ public class HttpServerConfig {
                 String username = params.get("username");
                 String password = params.get("password");
 
-                System.out.println("🔑 Username: " + username + ", Password: " + password);
+                System.out.println("Username: " + username + ", Password: " + password);
 
                 UserController userController = new UserController();
                 boolean authenticated = userController.authenticate(username, password);
-                System.out.println("✅ Autenticado? " + authenticated);
+                System.out.println("Autenticado? " + authenticated);
 
                 if (authenticated) {
                     // Cria a sessão e envia o cookie
@@ -74,7 +74,7 @@ public class HttpServerConfig {
                         os.write(response.getBytes());
                     }
 
-                    System.out.println("✅ Sessão criada: " + sessionId);
+                    System.out.println("Sessão criada: " + sessionId);
                 } else {
                     String response = "Usuário ou senha inválidos!";
                     exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
@@ -82,7 +82,7 @@ public class HttpServerConfig {
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(response.getBytes());
                     }
-                    System.out.println("❌ Falha na autenticação.");
+                    System.out.println("Falha na autenticação.");
                 }
             } else {
                 exchange.sendResponseHeaders(405, -1); // Método não permitido

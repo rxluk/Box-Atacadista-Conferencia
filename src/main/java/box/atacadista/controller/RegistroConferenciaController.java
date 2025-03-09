@@ -47,7 +47,13 @@ public class RegistroConferenciaController implements HttpHandler {
     }
 
     private void getRegistrosConferenciaByNotaFiscal(HttpExchange exchange) throws IOException {
-        String notaFiscal = extractParametro(exchange, "nota_fiscal");
+        String notaFiscal = extractParametro(exchange, "notafiscal");
+
+        if (notaFiscal.isEmpty()) {
+            sendResponse(exchange, 400, "Nota fiscal não fornecida");
+            return;
+        }
+
         List<RegistroConferencia> registros = registroConferenciaDao.getRegistrosConferenciaByNotaFiscal(notaFiscal);
 
         if (!registros.isEmpty()) {

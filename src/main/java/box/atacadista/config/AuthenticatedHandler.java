@@ -26,18 +26,18 @@ public class AuthenticatedHandler implements HttpHandler {
             return;
         }
 
-        System.out.println("🔒 Acessando recurso protegido: " + protectedResource);
+        System.out.println("Acessando recurso protegido: " + protectedResource);
 
         // Valida a sessão (verifica se o cookie de sessionId está presente)
         Optional<String> sessionId = getSessionIdFromCookies(exchange);
 
         if (sessionId.isPresent()) {
-            System.out.println("✅ Sessão válida: " + sessionId.get());
+            System.out.println("Sessão válida: " + sessionId.get());
 
             // Serve o recurso protegido
             serveProtectedResource(exchange);
         } else {
-            System.out.println("⛔ Sessão inválida! Redirecionando para login.");
+            System.out.println("Sessão inválida! Redirecionando para login.");
 
             // Se não houver sessão, redireciona para a página de login
             redirectToLogin(exchange);
@@ -50,7 +50,7 @@ public class AuthenticatedHandler implements HttpHandler {
 
         if (resourceStream == null) {
             // Retorna 404 se o recurso não for encontrado
-            String response = "❌ Recurso não encontrado: " + protectedResource;
+            String response = "Recurso não encontrado: " + protectedResource;
             exchange.sendResponseHeaders(404, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
@@ -67,7 +67,7 @@ public class AuthenticatedHandler implements HttpHandler {
             resourceStream.transferTo(os);
         }
 
-        System.out.println("✅ Recurso servido com sucesso: " + protectedResource);
+        System.out.println("Recurso servido com sucesso: " + protectedResource);
     }
 
     // Redireciona o usuário para a página de login
