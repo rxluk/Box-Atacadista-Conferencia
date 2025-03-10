@@ -1,7 +1,7 @@
 services:
   - type: web
     name: conferencia-app
-    env: openjdk
+    env: java
     plan: free
     buildCommand: ./mvnw clean install
     startCommand: java -jar target/src-1.0-SNAPSHOT.jar
