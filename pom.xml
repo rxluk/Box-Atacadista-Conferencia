@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>box.atacadista</groupId>
@@ -28,7 +28,6 @@
       <version>3.45.1.0</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -36,7 +35,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Dependência para o Jetty (servidor HTTP) -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
@@ -49,7 +47,6 @@
       <version>9.4.43.v20210629</version>
     </dependency>
 
-    <!-- Dependência para JSP (renderização de templates) -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -57,13 +54,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-jsp-2.1 -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-jsp-2.1</artifactId>
       <version>7.5.4.v20111024</version>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -72,6 +69,18 @@
         <configuration>
           <source>15</source>
           <target>15</target>
+        </configuration>
+      </plugin>
+      <!-- Plugin para gerar o arquivo JAR com a classe principal configurada -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Main-Class>box.atacadista.App</Main-Class>
+            </manifestEntries>
+          </archive>
         </configuration>
       </plugin>
     </plugins>
