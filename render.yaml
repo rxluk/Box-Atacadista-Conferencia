@@ -5,6 +5,5 @@ services:
     plan: free
     buildCommand: ./mvnw clean install
     startCommand: java -jar target/conferencia-1.0-SNAPSHOT.jar
-    branches:
-      - main
+    branch: main
     autoDeploy: true
