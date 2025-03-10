@@ -1,9 +1,9 @@
 services:
   - type: web
     name: conferencia-app
-    env: java
+    env: java11
     plan: free
     buildCommand: ./mvnw clean install
-    startCommand: java -jar target/conferencia-1.0-SNAPSHOT.jar
+    startCommand: java -jar target/src-1.0-SNAPSHOT.jar
     branch: main
     autoDeploy: true
